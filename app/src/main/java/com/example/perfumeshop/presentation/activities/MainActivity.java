@@ -16,6 +16,7 @@ import com.example.perfumeshop.data.api.AuthRepository;
 import com.example.perfumeshop.data.models.entities.User;
 
 import com.example.perfumeshop.presentation.fragments.CartFragment;
+import com.example.perfumeshop.presentation.fragments.ChatbotFragment;
 import com.example.perfumeshop.presentation.fragments.HomeFragment;
 import com.example.perfumeshop.presentation.fragments.profile.ProfileFragment;
 import com.example.perfumeshop.presentation.viewmodels.AuthViewModel;
@@ -134,6 +135,8 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             fragment = new HomeFragment();
         } else if (id == R.id.navigation_cart) {
             fragment = new CartFragment();
+        } else if (id == R.id.navigation_chatbot) {
+            fragment = new ChatbotFragment();
         } else if (id == R.id.navigation_profile) {
             fragment = new ProfileFragment();
         }
