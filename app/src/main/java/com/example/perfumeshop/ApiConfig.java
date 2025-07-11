@@ -10,10 +10,13 @@ public class ApiConfig {
     public static final String AUTH_LOGOUT = "auth/logout";
     public static final String AUTH_REFRESH = "auth/refresh";
 
+    // Chatbot endpoint
+    public static final String CHATBOT_CHAT = "chat/message";
+
     // Timeouts
-    public static final int TIMEOUT_CONNECT = 30; // seconds
-    public static final int TIMEOUT_READ = 30; // seconds
-    public static final int TIMEOUT_WRITE = 30; // seconds
+    public static final int TIMEOUT_CONNECT = 120; // seconds
+    public static final int TIMEOUT_READ = 120; // seconds
+    public static final int TIMEOUT_WRITE = 120; // seconds
 
     // Headers
     public static final String CONTENT_TYPE = "application/json";
