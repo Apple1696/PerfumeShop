@@ -1,23 +1,28 @@
 package com.example.perfumeshop.presentation.activities;
 
-import android.os.Bundle;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 
 import com.example.perfumeshop.R;
 import com.example.perfumeshop.data.api.AuthRepository;
 import com.example.perfumeshop.data.models.entities.User;
+
+import com.example.perfumeshop.presentation.fragments.CartFragment;
+import com.example.perfumeshop.presentation.fragments.HomeFragment;
+import com.example.perfumeshop.presentation.fragments.profile.ProfileFragment;
 import com.example.perfumeshop.presentation.viewmodels.AuthViewModel;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
-    private TextView textViewWelcome;
     private AuthViewModel authViewModel;
 
     @Override
@@ -25,26 +30,36 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initViews();
         setupViewModel();
         setupObservers();
+        setupBottomNavigation();
 
         // Check if user is logged in
         checkLoginState();
+
+        // Load default fragment
+        loadFragment(new HomeFragment());
     }
 
-    private void initViews() {
-        textViewWelcome = findViewById(R.id.textViewWelcome);
+    private void setupBottomNavigation() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        bottomNav.setOnNavigationItemSelectedListener(this);
+    }
+
+    private boolean loadFragment(Fragment fragment) {
+        if (fragment != null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, fragment)
+                    .commit();
+            return true;
+        }
+        return false;
     }
 
     private void setupViewModel() {
         AuthRepository authRepository = new AuthRepository(this);
         authViewModel = new AuthViewModel(authRepository);
-        // Initialize the logout button and set its click listener
-        findViewById(R.id.buttonLogout).setOnClickListener(view -> {
-            authViewModel.logout();
-            Toast.makeText(MainActivity.this, "Logging out...", Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void setupObservers() {
@@ -52,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
         authViewModel.getCurrentUser().observe(this, new Observer<User>() {
             @Override
             public void onChanged(User user) {
-                if (user != null) {
-                    textViewWelcome.setText("Welcome, " + user.getFullName());
-                }
+                // Update UI if needed
             }
         });
 
@@ -110,5 +123,21 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment fragment = null;
+        int id = item.getItemId();
+
+        if (id == R.id.navigation_home) {
+            fragment = new HomeFragment();
+        } else if (id == R.id.navigation_cart) {
+            fragment = new CartFragment();
+        } else if (id == R.id.navigation_profile) {
+            fragment = new ProfileFragment();
+        }
+
+        return loadFragment(fragment);
     }
 }
