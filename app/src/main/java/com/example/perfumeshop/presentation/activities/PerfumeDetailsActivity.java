@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.perfumeshop.R;
+import com.example.perfumeshop.data.local.CartManager;
+import com.example.perfumeshop.data.models.entities.CartItem;
 import com.example.perfumeshop.data.models.entities.Perfume;
 import com.example.perfumeshop.presentation.adapters.CommentsAdapter;
 import com.example.perfumeshop.presentation.viewmodels.PerfumeDetailsViewModel;
@@ -22,10 +25,13 @@ import com.example.perfumeshop.presentation.viewmodels.PerfumeDetailsViewModel;
 public class PerfumeDetailsActivity extends AppCompatActivity {
     private PerfumeDetailsViewModel viewModel;
     private CommentsAdapter commentsAdapter;
+    private CartManager cartManager;
+    private Perfume currentPerfume;
 
     // Views
     private ImageView imageViewPerfume;
     private ImageView imageViewBack;
+    private CardView buttonAddToCart;
     private TextView textViewPerfumeName;
     private TextView textViewBrand;
     private TextView textViewPrice;
@@ -43,13 +49,14 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_perfume_details);
-
-        initViews();
+        setContentView(R.layout.activity_perfume_details);        initViews();
         setupViewModel();
         setupRecyclerView();
         setupObservers();
         setupClickListeners();
+        
+        // Initialize CartManager
+        cartManager = CartManager.getInstance(this);
 
         // Get perfume ID from intent
         String perfumeId = getIntent().getStringExtra("perfume_id");
@@ -59,11 +66,10 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
             showError("No perfume ID provided");
             finish();
         }
-    }
-
-    private void initViews() {
+    }    private void initViews() {
         imageViewPerfume = findViewById(R.id.imageViewPerfume);
         imageViewBack = findViewById(R.id.imageViewBack);
+        buttonAddToCart = findViewById(R.id.buttonAddToCart);
         textViewPerfumeName = findViewById(R.id.textViewPerfumeName);
         textViewBrand = findViewById(R.id.textViewBrand);
         textViewPrice = findViewById(R.id.textViewPrice);
@@ -90,9 +96,9 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
         recyclerViewComments.setAdapter(commentsAdapter);
     }
 
-    private void setupObservers() {
-        viewModel.getPerfumeLiveData().observe(this, perfume -> {
+    private void setupObservers() {        viewModel.getPerfumeLiveData().observe(this, perfume -> {
             if (perfume != null) {
+                currentPerfume = perfume;
                 displayPerfumeDetails(perfume);
             }
         });
@@ -106,10 +112,21 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
                 showError(error);
             }
         });
-    }
-
-    private void setupClickListeners() {
+    }    private void setupClickListeners() {
         imageViewBack.setOnClickListener(v -> finish());
+        
+        buttonAddToCart.setOnClickListener(v -> {
+            if (currentPerfume != null) {
+                addToCart();
+            }
+        });
+    }
+    
+    private void addToCart() {
+        CartItem cartItem = CartItem.fromPerfume(currentPerfume);
+        cartManager.addToCart(cartItem);
+        
+        Toast.makeText(this, "Added to cart successfully!", Toast.LENGTH_SHORT).show();
     }
 
     private void displayPerfumeDetails(Perfume perfume) {
