@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -58,23 +59,38 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.Commen
         private TextView textViewUserName;
         private TextView textViewContent;
         private TextView textViewDate;
+        private RatingBar ratingBarComment;
 
         public CommentViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewUserName = itemView.findViewById(R.id.textViewUserName);
             textViewContent = itemView.findViewById(R.id.textViewContent);
             textViewDate = itemView.findViewById(R.id.textViewDate);
+            ratingBarComment = itemView.findViewById(R.id.ratingBarComment);
         }
 
         public void bind(Comment comment) {
-            textViewUserName.setText(comment.getUserName() != null ? comment.getUserName() : "Anonymous");
+            // Use author username if available, otherwise fall back to userName field
+            String username = "Anonymous";
+            if (comment.getAuthor() != null && comment.getAuthor().getUsername() != null) {
+                username = comment.getAuthor().getUsername();
+            } else if (comment.getUserName() != null) {
+                username = comment.getUserName();
+            }
+            textViewUserName.setText(username);
+            
             textViewContent.setText(comment.getContent());
+            
+            // Set rating
+            if (ratingBarComment != null) {
+                ratingBarComment.setRating(comment.getRating());
+            }
             
             // Format date if available
             if (comment.getCreatedAt() != null && !comment.getCreatedAt().isEmpty()) {
                 try {
-                    // Assuming the date format from API, adjust as needed
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault());
+                    // Parse ISO date format: 2025-07-12T18:17:16.291Z
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
                     Date date = formatter.parse(comment.getCreatedAt());
                     SimpleDateFormat displayFormatter = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault());
                     textViewDate.setText(displayFormatter.format(date));

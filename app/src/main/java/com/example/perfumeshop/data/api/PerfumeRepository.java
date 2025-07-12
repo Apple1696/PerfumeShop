@@ -5,6 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.perfumeshop.data.models.entities.Brand;
 import com.example.perfumeshop.data.models.entities.Perfume;
+import com.example.perfumeshop.data.models.request.CommentRequest;
+import com.example.perfumeshop.data.models.response.ApiResponse;
 
 import java.util.List;
 
@@ -86,6 +88,11 @@ public class PerfumeRepository {
 
     public void fetchPerfumeDetail(String perfumeId, Callback<Perfume> callback) {
         Call<Perfume> call = apiService.getPerfumeDetail(perfumeId);
+        call.enqueue(callback);
+    }
+
+    public void createComment(String perfumeId, CommentRequest commentRequest, Callback<ApiResponse<String>> callback) {
+        Call<ApiResponse<String>> call = apiService.createComment(perfumeId, commentRequest);
         call.enqueue(callback);
     }
 }

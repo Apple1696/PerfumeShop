@@ -6,6 +6,7 @@ import com.example.perfumeshop.data.models.entities.Perfume;
 import com.example.perfumeshop.data.models.entities.User;
 import com.example.perfumeshop.data.models.request.LoginRequest;
 import com.example.perfumeshop.data.models.request.RegisterRequest;
+import com.example.perfumeshop.data.models.request.CommentRequest;
 import com.example.perfumeshop.data.models.response.ApiResponse;
 import com.example.perfumeshop.data.models.response.AuthResponse;
 
@@ -38,6 +39,10 @@ public interface ApiService {
     // Brand endpoints
     @GET(ApiConfig.BRAND_LIST)
     Call<List<Brand>> getBrands();
+
+    // Comment endpoints
+    @POST(ApiConfig.COMMENT_CREATE)
+    Call<ApiResponse<String>> createComment(@Path("id") String perfumeId, @Body CommentRequest commentRequest);
 
     // Add other endpoints as needed
     @GET("user/profile")

@@ -36,9 +36,21 @@
                 android:layout_height="wrap_content"
                 android:text="Dec 12, 2024"
                 android:textSize="12sp"
-                android:textColor="@color/gray_text" />
+                android:textColor="@color/gray_text" />        </LinearLayout>
 
-        </LinearLayout>
+        <!-- Rating Bar -->
+        <RatingBar
+            android:id="@+id/ratingBarComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="1.0"
+            style="?android:attr/ratingBarStyleSmall"
+            android:progressTint="@color/primary_color"
+            android:secondaryProgressTint="@color/light_gray"
+            android:isIndicator="true"
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:id="@+id/textViewContent"
