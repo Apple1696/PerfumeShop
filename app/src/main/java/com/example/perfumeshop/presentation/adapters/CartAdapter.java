@@ -91,14 +91,16 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             imageViewRemove = itemView.findViewById(R.id.imageViewRemove);
             buttonDecrease = itemView.findViewById(R.id.buttonDecrease);
             buttonIncrease = itemView.findViewById(R.id.buttonIncrease);
-        }
-
-        public void bind(CartItem item) {
+        }        public void bind(CartItem item) {
             // Set basic information
             textViewPerfumeName.setText(item.getPerfumeName());
             textViewBrand.setText(item.getBrandName());
             textViewVolume.setText(item.getVolume() + "ml");
             textViewTargetAudience.setText(item.getTargetAudience());
+            
+            // Set background color for target audience
+            setTargetAudienceBackground(textViewTargetAudience, item.getTargetAudience());
+            
             textViewPrice.setText(item.getFormattedTotalPrice());
             textViewQuantity.setText(String.valueOf(item.getQuantity()));
 
@@ -156,6 +158,32 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                     listener.onQuantityChanged(item, currentQuantity + 1);
                 }
             });
+        }
+        
+        private void setTargetAudienceBackground(TextView textView, String targetAudience) {
+            int backgroundRes;
+            if (targetAudience != null) {
+                switch (targetAudience.toLowerCase()) {
+                    case "male":
+                        backgroundRes = R.color.male_bg;
+                        break;
+                    case "female":
+                        backgroundRes = R.color.female_bg;
+                        break;
+                    case "unisex":
+                        backgroundRes = R.color.unisex_bg;
+                        break;
+                    default:
+                        backgroundRes = R.color.light_gray;
+                        break;
+                }
+            } else {
+                backgroundRes = R.color.light_gray;
+            }
+            
+            // Set rounded background drawable with color tint
+            textView.setBackgroundResource(R.drawable.rounded_target_audience_bg);
+            textView.getBackground().setTint(context.getResources().getColor(backgroundRes, null));
         }
     }
 }

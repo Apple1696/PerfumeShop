@@ -127,9 +127,7 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
         cartManager.addToCart(cartItem);
         
         Toast.makeText(this, "Added to cart successfully!", Toast.LENGTH_SHORT).show();
-    }
-
-    private void displayPerfumeDetails(Perfume perfume) {
+    }    private void displayPerfumeDetails(Perfume perfume) {
         // Hide error and loading states
         textViewError.setVisibility(View.GONE);
         progressBarContent.setVisibility(View.GONE);
@@ -141,6 +139,10 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
         textViewVolume.setText(perfume.getVolume() + "ml");
         textViewConcentration.setText(perfume.getConcentration());
         textViewTargetAudience.setText(perfume.getTargetAudience());
+        
+        // Set background color for target audience
+        setTargetAudienceBackground(textViewTargetAudience, perfume.getTargetAudience());
+        
         textViewDescription.setText(perfume.getDescription());
         textViewIngredients.setText(perfume.getIngredients());
 
@@ -149,7 +151,32 @@ public class PerfumeDetailsActivity extends AppCompatActivity {
 
         // Setup comments
         setupComments(perfume);
-    }    private void loadPerfumeImage(String imageUrl) {
+    }
+      private void setTargetAudienceBackground(TextView textView, String targetAudience) {
+        int backgroundRes;
+        if (targetAudience != null) {
+            switch (targetAudience.toLowerCase()) {
+                case "male":
+                    backgroundRes = R.color.male_bg;
+                    break;
+                case "female":
+                    backgroundRes = R.color.female_bg;
+                    break;
+                case "unisex":
+                    backgroundRes = R.color.unisex_bg;
+                    break;
+                default:
+                    backgroundRes = R.color.light_gray;
+                    break;
+            }
+        } else {
+            backgroundRes = R.color.light_gray;
+        }
+        
+        // Set rounded background drawable with color tint
+        textView.setBackgroundResource(R.drawable.rounded_target_audience_bg);
+        textView.getBackground().setTint(getResources().getColor(backgroundRes, null));
+    }private void loadPerfumeImage(String imageUrl) {
         if (imageUrl != null && !imageUrl.isEmpty()) {
             progressBarImage.setVisibility(View.VISIBLE);
             

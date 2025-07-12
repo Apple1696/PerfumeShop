@@ -76,14 +76,15 @@ public class PerfumeAdapter extends RecyclerView.Adapter<PerfumeAdapter.PerfumeV
             textViewPrice = itemView.findViewById(R.id.textViewPrice);
             textViewVolume = itemView.findViewById(R.id.textViewVolume);
             textViewTargetAudience = itemView.findViewById(R.id.textViewTargetAudience);
-        }
-
-        public void bind(Perfume perfume) {
+        }        public void bind(Perfume perfume) {
             textViewName.setText(perfume.getPerfumeName());
             textViewBrand.setText(perfume.getBrand() != null ? perfume.getBrand().getBrandName() : "Unknown");
             textViewPrice.setText(perfume.getFormattedPrice());
             textViewVolume.setText(perfume.getVolume() + "ml");
             textViewTargetAudience.setText(perfume.getTargetAudience());
+
+            // Set background color based on target audience
+            setTargetAudienceBackground(textViewTargetAudience, perfume.getTargetAudience());
 
             // Load image with Glide
             Glide.with(context)
@@ -101,6 +102,31 @@ public class PerfumeAdapter extends RecyclerView.Adapter<PerfumeAdapter.PerfumeV
                 intent.putExtra("perfume_name", perfume.getPerfumeName());
                 context.startActivity(intent);
             });
+        }
+          private void setTargetAudienceBackground(TextView textView, String targetAudience) {
+            int backgroundRes;
+            if (targetAudience != null) {
+                switch (targetAudience.toLowerCase()) {
+                    case "male":
+                        backgroundRes = R.color.male_bg;
+                        break;
+                    case "female":
+                        backgroundRes = R.color.female_bg;
+                        break;
+                    case "unisex":
+                        backgroundRes = R.color.unisex_bg;
+                        break;
+                    default:
+                        backgroundRes = R.color.light_gray;
+                        break;
+                }
+            } else {
+                backgroundRes = R.color.light_gray;
+            }
+            
+            // Set rounded background drawable with color tint
+            textView.setBackgroundResource(R.drawable.rounded_target_audience_bg);
+            textView.getBackground().setTint(context.getResources().getColor(backgroundRes, null));
         }
     }
 }

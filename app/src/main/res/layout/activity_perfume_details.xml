@@ -215,16 +215,16 @@
                             android:layout_height="wrap_content"
                             android:text="For"
                             android:textSize="12sp"
-                            android:textColor="@color/gray_text" />
-
-                        <TextView
+                            android:textColor="@color/gray_text" />                        <TextView
                             android:id="@+id/textViewTargetAudience"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Female"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp" />
 
                     </LinearLayout>
 
