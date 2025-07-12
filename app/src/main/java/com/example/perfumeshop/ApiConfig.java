@@ -20,6 +20,9 @@ public class ApiConfig {
     // Brand endpoints
     public static final String BRAND_LIST = "brand";
     
+    // Order endpoint
+    public static final String ORDER_CREATE = "payment/create-payment";
+
     // Timeouts
     public static final int TIMEOUT_CONNECT = 120; // seconds
     public static final int TIMEOUT_READ = 120; // seconds

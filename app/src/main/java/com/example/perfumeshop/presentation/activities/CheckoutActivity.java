@@ -1,5 +1,6 @@
 package com.example.perfumeshop.presentation.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.perfumeshop.R;
+import com.example.perfumeshop.data.models.response.OrderResponse;
 import com.example.perfumeshop.presentation.adapters.CheckoutAdapter;
 import com.example.perfumeshop.presentation.viewmodels.CheckoutViewModel;
 import com.google.android.material.textfield.TextInputEditText;
@@ -27,12 +29,10 @@ public class CheckoutActivity extends AppCompatActivity {
     private ImageView imageViewBack;
     private RecyclerView recyclerViewCheckoutItems;
     private TextView textViewOrderTotal;
-    private TextInputEditText editTextFullName;
+    private TextInputEditText editTextCustomerName;
     private TextInputEditText editTextPhone;
     private TextInputEditText editTextEmail;
     private TextInputEditText editTextAddress;
-    private TextInputEditText editTextCity;
-    private TextInputEditText editTextPostalCode;
     private RadioGroup radioGroupPayment;
     private CardView buttonPlaceOrder;
     private ProgressBar progressBarCheckout;
@@ -56,12 +56,10 @@ public class CheckoutActivity extends AppCompatActivity {
         imageViewBack = findViewById(R.id.imageViewBack);
         recyclerViewCheckoutItems = findViewById(R.id.recyclerViewCheckoutItems);
         textViewOrderTotal = findViewById(R.id.textViewOrderTotal);
-        editTextFullName = findViewById(R.id.editTextFullName);
+        editTextCustomerName = findViewById(R.id.editTextFullName); // Reuse existing view
         editTextPhone = findViewById(R.id.editTextPhone);
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextAddress = findViewById(R.id.editTextAddress);
-        editTextCity = findViewById(R.id.editTextCity);
-        editTextPostalCode = findViewById(R.id.editTextPostalCode);
         radioGroupPayment = findViewById(R.id.radioGroupPayment);
         buttonPlaceOrder = findViewById(R.id.buttonPlaceOrder);
         progressBarCheckout = findViewById(R.id.progressBarCheckout);
@@ -99,11 +97,35 @@ public class CheckoutActivity extends AppCompatActivity {
             buttonPlaceOrder.setEnabled(!isLoading);
         });
 
-        // Observe order success
+        // Observe order success (for COD payments)
         viewModel.getOrderSuccessLiveData().observe(this, isSuccess -> {
             if (isSuccess != null && isSuccess) {
-                Toast.makeText(this, "Order placed successfully!", Toast.LENGTH_LONG).show();
-                finish();
+                showOrderSuccessScreen();
+            }
+        });
+
+        // Observe order failed
+        viewModel.getOrderFailedLiveData().observe(this, isFailed -> {
+            if (isFailed != null && isFailed) {
+                showOrderFailedScreen();
+            }
+        });
+
+        // Observe payment URL (for PAYOS payments)
+        viewModel.getPaymentUrlLiveData().observe(this, paymentUrl -> {
+            if (paymentUrl != null && !paymentUrl.isEmpty()) {
+                viewModel.openPaymentUrl(paymentUrl);
+            }
+        });
+
+        // Observe order response for additional handling
+        viewModel.getOrderResponseLiveData().observe(this, orderResponse -> {
+            if (orderResponse != null && orderResponse.isSuccess()) {
+                String message = "Order #" + orderResponse.getOrderCode() + " created successfully!";
+                if (orderResponse.isCODPayment()) {
+                    message += "\n" + orderResponse.getMessage();
+                }
+                Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -126,16 +148,14 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private boolean validateInputs() {
-        String fullName = editTextFullName.getText().toString().trim();
+        String customerName = editTextCustomerName.getText().toString().trim();
         String phone = editTextPhone.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
         String address = editTextAddress.getText().toString().trim();
-        String city = editTextCity.getText().toString().trim();
-        String postalCode = editTextPostalCode.getText().toString().trim();
 
-        if (fullName.isEmpty()) {
-            editTextFullName.setError("Full name is required");
-            editTextFullName.requestFocus();
+        if (customerName.isEmpty()) {
+            editTextCustomerName.setError("Customer name is required");
+            editTextCustomerName.requestFocus();
             return false;
         }
 
@@ -157,39 +177,54 @@ public class CheckoutActivity extends AppCompatActivity {
             return false;
         }
 
-        if (city.isEmpty()) {
-            editTextCity.setError("City is required");
-            editTextCity.requestFocus();
-            return false;
-        }
-
-        if (postalCode.isEmpty()) {
-            editTextPostalCode.setError("Postal code is required");
-            editTextPostalCode.requestFocus();
-            return false;
-        }
-
         return true;
     }
 
     private void placeOrder() {
-        String fullName = editTextFullName.getText().toString().trim();
+        String customerName = editTextCustomerName.getText().toString().trim();
         String phone = editTextPhone.getText().toString().trim();
         String email = editTextEmail.getText().toString().trim();
         String address = editTextAddress.getText().toString().trim();
-        String city = editTextCity.getText().toString().trim();
-        String postalCode = editTextPostalCode.getText().toString().trim();
-        
-        // Get selected payment method
-        String paymentMethod = "Cash on Delivery"; // Default
+
+        // Get selected payment method - map to API values
+        String paymentMethod = "COD"; // Default
         int selectedPaymentId = radioGroupPayment.getCheckedRadioButtonId();
-        if (selectedPaymentId == R.id.radioBankTransfer) {
-            paymentMethod = "Bank Transfer";
-        } else if (selectedPaymentId == R.id.radioCreditCard) {
-            paymentMethod = "Credit/Debit Card";
+        if (selectedPaymentId == R.id.radioPAYOS) {
+            paymentMethod = "PAYOS";
         }
 
         // Create order
-        viewModel.placeOrder(fullName, phone, email, address, city, postalCode, paymentMethod);
+        viewModel.placeOrder(customerName, phone, email, address, paymentMethod);
+    }
+
+    private void showOrderSuccessScreen() {
+        // Get order response data to pass to success activity
+        OrderResponse orderResponse = viewModel.getOrderResponseLiveData().getValue();
+
+        Intent intent = new Intent(this, OrderSuccessActivity.class);
+        if (orderResponse != null) {
+            intent.putExtra("orderCode", orderResponse.getOrderCode());
+            intent.putExtra("totalAmount", orderResponse.getTotalAmount());
+            intent.putExtra("paymentMethod", orderResponse.isPayOSPayment() ? "PAYOS" : "COD");
+            if (orderResponse.getMessage() != null) {
+                intent.putExtra("message", orderResponse.getMessage());
+            }
+        }
+
+        startActivity(intent);
+        finish(); // Close checkout activity
+    }
+
+    private void showOrderFailedScreen() {
+        // Get error message from ViewModel
+        String errorMessage = viewModel.getErrorLiveData().getValue();
+
+        // Navigate to order failed activity with error details
+        Intent intent = new Intent(this, OrderFailedActivity.class);
+        intent.putExtra("errorMessage", "Order Failed");
+        intent.putExtra("failureReason", errorMessage != null ? errorMessage : "We encountered an error while processing your order. Please try again.");
+
+        startActivity(intent);
+        finish(); // Close checkout activity
     }
 }

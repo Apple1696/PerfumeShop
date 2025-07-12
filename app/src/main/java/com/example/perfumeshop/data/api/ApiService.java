@@ -5,9 +5,11 @@ import com.example.perfumeshop.data.models.entities.Brand;
 import com.example.perfumeshop.data.models.entities.Perfume;
 import com.example.perfumeshop.data.models.entities.User;
 import com.example.perfumeshop.data.models.request.LoginRequest;
+import com.example.perfumeshop.data.models.request.OrderRequest;
 import com.example.perfumeshop.data.models.request.RegisterRequest;
 import com.example.perfumeshop.data.models.response.ApiResponse;
 import com.example.perfumeshop.data.models.response.AuthResponse;
+import com.example.perfumeshop.data.models.response.OrderResponse;
 
 import java.util.List;
 
@@ -38,6 +40,10 @@ public interface ApiService {
     // Brand endpoints
     @GET(ApiConfig.BRAND_LIST)
     Call<List<Brand>> getBrands();
+
+    // Order endpoint
+    @POST(ApiConfig.ORDER_CREATE)
+    Call<OrderResponse> createOrder(@Body OrderRequest orderRequest);
 
     // Add other endpoints as needed
     @GET("user/profile")
