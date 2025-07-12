@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,13 +32,14 @@ import com.example.perfumeshop.presentation.viewmodels.HomeViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
-    private HomeViewModel viewModel;
+public class HomeFragment extends Fragment {    private HomeViewModel viewModel;
     private PerfumeAdapter perfumeAdapter;
     private BrandSpinnerAdapter brandAdapter;
+    private ArrayAdapter<String> genderAdapter;
     
     private EditText editTextSearch;
     private Spinner spinnerBrands;
+    private Spinner spinnerGender;
     private ImageView imageViewClearFilter;
     private RecyclerView recyclerViewPerfumes;
     private ProgressBar progressBar;
@@ -55,18 +57,17 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         
         initViews(view);
-        setupViewModel();
-        setupRecyclerView();
+        setupViewModel();        setupRecyclerView();
         setupSearchAndFilter();
         setupObservers();
+        setupGenderSpinner();
         
         // Fetch data
         viewModel.fetchData();
-    }
-
-    private void initViews(View view) {
+    }    private void initViews(View view) {
         editTextSearch = view.findViewById(R.id.editTextSearch);
         spinnerBrands = view.findViewById(R.id.spinnerBrands);
+        spinnerGender = view.findViewById(R.id.spinnerGender);
         imageViewClearFilter = view.findViewById(R.id.imageViewClearFilter);
         recyclerViewPerfumes = view.findViewById(R.id.recyclerViewPerfumes);
         progressBar = view.findViewById(R.id.progressBar);
@@ -76,13 +77,14 @@ public class HomeFragment extends Fragment {
 
     private void setupViewModel() {
         viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-    }
-
-    private void setupRecyclerView() {
+    }    private void setupRecyclerView() {
         perfumeAdapter = new PerfumeAdapter(getContext());
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerViewPerfumes.setLayoutManager(layoutManager);
         recyclerViewPerfumes.setAdapter(perfumeAdapter);
+        
+        // Enable smooth scrolling
+        recyclerViewPerfumes.setHasFixedSize(true);
     }
 
     private void setupSearchAndFilter() {
@@ -98,12 +100,11 @@ public class HomeFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 viewModel.searchPerfumes(s.toString());
             }
-        });
-
-        // Setup clear filter button
+        });        // Setup clear filter button
         imageViewClearFilter.setOnClickListener(v -> {
             editTextSearch.setText("");
             spinnerBrands.setSelection(0);
+            spinnerGender.setSelection(0);
             viewModel.clearFilters();
         });
     }
@@ -167,6 +168,34 @@ public class HomeFragment extends Fragment {
                     viewModel.filterByBrand("");
                 } else {
                     viewModel.filterByBrand(selectedBrand.getBrandName());
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
+    private void setupGenderSpinner() {
+        List<String> genderOptions = new ArrayList<>();
+        genderOptions.add("All Genders");
+        genderOptions.add("Male");
+        genderOptions.add("Female");
+        genderOptions.add("Unisex");
+
+        genderAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, genderOptions);
+        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerGender.setAdapter(genderAdapter);
+
+        spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedGender = genderOptions.get(position);
+                if (position == 0) {
+                    // "All Genders" selected
+                    viewModel.filterByGender("");
+                } else {
+                    viewModel.filterByGender(selectedGender);
                 }
             }
 

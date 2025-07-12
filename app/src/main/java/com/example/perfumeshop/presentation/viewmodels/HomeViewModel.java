@@ -13,10 +13,10 @@ import java.util.List;
 
 public class HomeViewModel extends ViewModel {
     private PerfumeRepository repository;
-    private MutableLiveData<List<Perfume>> filteredPerfumesLiveData;
-    private List<Perfume> allPerfumes;
+    private MutableLiveData<List<Perfume>> filteredPerfumesLiveData;    private List<Perfume> allPerfumes;
     private String currentSearchQuery = "";
     private String currentBrandFilter = "";
+    private String currentGenderFilter = "";
 
     public HomeViewModel() {
         repository = new PerfumeRepository();
@@ -57,20 +57,22 @@ public class HomeViewModel extends ViewModel {
     public void searchPerfumes(String query) {
         currentSearchQuery = query.toLowerCase().trim();
         applyFilters();
+    }    public void filterByBrand(String brandName) {
+        currentBrandFilter = brandName;
+        applyFilters();
     }
 
-    public void filterByBrand(String brandName) {
-        currentBrandFilter = brandName;
+    public void filterByGender(String gender) {
+        currentGenderFilter = gender;
         applyFilters();
     }
 
     public void clearFilters() {
         currentSearchQuery = "";
         currentBrandFilter = "";
+        currentGenderFilter = "";
         applyFilters();
-    }
-
-    private void applyFilters() {
+    }    private void applyFilters() {
         List<Perfume> filtered = new ArrayList<>();
 
         for (Perfume perfume : allPerfumes) {
@@ -81,7 +83,10 @@ public class HomeViewModel extends ViewModel {
             boolean matchesBrand = currentBrandFilter.isEmpty() ||
                     (perfume.getBrand() != null && perfume.getBrand().getBrandName().equals(currentBrandFilter));
 
-            if (matchesSearch && matchesBrand) {
+            boolean matchesGender = currentGenderFilter.isEmpty() ||
+                    (perfume.getTargetAudience() != null && perfume.getTargetAudience().equals(currentGenderFilter));
+
+            if (matchesSearch && matchesBrand && matchesGender) {
                 filtered.add(perfume);
             }
         }
