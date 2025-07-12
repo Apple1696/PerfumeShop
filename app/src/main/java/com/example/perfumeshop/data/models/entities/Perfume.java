@@ -10,9 +10,8 @@ public class Perfume {
     private String concentration;
     private String description;
     private String ingredients;
-    private int volume;
-    private String targetAudience;
-    private List<Object> comments; // Keep as Object for now since comments are handled later
+    private int volume;    private String targetAudience;
+    private List<Comment> comments;
     private Brand brand;
 
     public Perfume() {}
@@ -87,13 +86,11 @@ public class Perfume {
 
     public void setTargetAudience(String targetAudience) {
         this.targetAudience = targetAudience;
-    }
-
-    public List<Object> getComments() {
+    }    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<Object> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 

@@ -24,14 +24,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <activity
+        </activity>        <activity
             android:name=".presentation.activities.MainActivity"
             android:exported="false" />
 
         <activity
             android:name=".presentation.activities.RegisterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".presentation.activities.PerfumeDetailsActivity"
             android:exported="false" />
     </application>
 </manifest>
