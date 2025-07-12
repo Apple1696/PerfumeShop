@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.perfumeshop.R;
 import com.example.perfumeshop.data.models.entities.CartItem;
+import com.example.perfumeshop.presentation.activities.CheckoutActivity;
 import com.example.perfumeshop.presentation.activities.PerfumeDetailsActivity;
 import com.example.perfumeshop.presentation.adapters.CartAdapter;
 import com.example.perfumeshop.presentation.viewmodels.CartViewModel;
@@ -106,10 +107,10 @@ public class CartFragment extends Fragment implements CartAdapter.OnCartItemActi
         buttonClearCart.setOnClickListener(v -> {
             viewModel.clearCart();
             Toast.makeText(getContext(), "Cart cleared", Toast.LENGTH_SHORT).show();
-        });
-
-        buttonCheckout.setOnClickListener(v -> {
-            Toast.makeText(getContext(), "Checkout functionality coming soon!", Toast.LENGTH_LONG).show();
+        });        buttonCheckout.setOnClickListener(v -> {
+            // Navigate to checkout activity
+            Intent intent = new Intent(getContext(), CheckoutActivity.class);
+            startActivity(intent);
         });
     }
 

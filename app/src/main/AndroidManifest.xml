@@ -30,10 +30,12 @@
 
         <activity
             android:name=".presentation.activities.RegisterActivity"
+            android:exported="false" />        <activity
+            android:name=".presentation.activities.PerfumeDetailsActivity"
             android:exported="false" />
 
         <activity
-            android:name=".presentation.activities.PerfumeDetailsActivity"
+            android:name=".presentation.activities.CheckoutActivity"
             android:exported="false" />
     </application>
 </manifest>
