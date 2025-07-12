@@ -24,18 +24,106 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>        <activity
+
+            <!-- Deeplink for login -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="auth"
+                      android:path="/login" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".presentation.activities.MainActivity"
-            android:exported="false" />
+            android:exported="true">
+
+            <!-- Deeplink for main app -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="app"
+                      android:path="/home" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".presentation.activities.RegisterActivity"
-            android:exported="false" />        <activity
+            android:exported="true">
+
+            <!-- Deeplink for registration -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="auth"
+                      android:path="/register" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".presentation.activities.PerfumeDetailsActivity"
-            android:exported="false" />
+            android:exported="true">
+
+            <!-- Deeplink for perfume details -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="product"
+                      android:pathPattern="/.*" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".presentation.activities.CheckoutActivity"
-            android:exported="false" />
+            android:exported="true">
+
+            <!-- Deeplink for checkout -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="app"
+                      android:path="/checkout" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".presentation.activities.OrderSuccessActivity"
+            android:exported="true">
+
+            <!-- Deeplink for order success -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="order"
+                      android:path="/success" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".presentation.activities.OrderFailedActivity"
+            android:exported="true">
+
+            <!-- Deeplink for order failed -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="order"
+                      android:path="/failed" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

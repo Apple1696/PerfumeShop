@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="@android:color/white">
+
+    <!-- Error Icon -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        app:cardCornerRadius="60dp"
+        app:cardElevation="8dp"
+        app:cardBackgroundColor="#FFEBEE"
+        android:layout_marginBottom="32dp">
+
+        <ImageView
+            android:id="@+id/imageViewError"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete"
+            android:tint="#F44336" />
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Error Title -->
+    <TextView
+        android:id="@+id/textViewErrorMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Order Failed!"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#D32F2F"
+        android:layout_marginBottom="16dp"
+        android:gravity="center" />
+
+    <!-- Error Message -->
+    <TextView
+        android:id="@+id/textViewFailureReason"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="We encountered an error while processing your order.\nPlease try again or contact support."
+        android:textSize="16sp"
+        android:textColor="#666666"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.3" />
+
+    <!-- Order Code (if available) -->
+    <TextView
+        android:id="@+id/textViewOrderCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reference: #123456"
+        android:textSize="14sp"
+        android:textColor="#999999"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Retry Order Button -->
+        <Button
+            android:id="@+id/buttonRetryOrder"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Try Again"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="#ff6b35"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Back to Home Button -->
+        <Button
+            android:id="@+id/buttonBackToHome"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Back to Home"
+            android:textColor="#666666"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:background="@android:color/white"
+            android:layout_marginTop="4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>
