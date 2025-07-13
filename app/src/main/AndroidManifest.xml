@@ -125,5 +125,6 @@
                       android:path="/failed" />
             </intent-filter>
         </activity>
+
     </application>
 </manifest>

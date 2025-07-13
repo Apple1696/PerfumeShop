@@ -23,6 +23,10 @@ public class ApiConfig {
     
     // Order endpoint
     public static final String ORDER_CREATE = "payment/create-payment";
+    public static final String ORDER_HISTORY = "order/user";
+
+    // User Profile endpoint
+    public static final String USER_PROFILE = "user/profile";
 
     // Timeouts
     public static final int TIMEOUT_CONNECT = 120; // seconds

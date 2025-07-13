@@ -5,19 +5,21 @@ public class RegisterRequest {
     private String username;
     private String email;
     private String password;
+    private String phone;
     private int yob;
     private boolean gender;
 
-    public RegisterRequest(String fullName, String username, String email, String password, int yob, boolean gender) {
+    public RegisterRequest(String fullName, String username, String email, String password, String phone, int yob, boolean gender) {
         this.fullName = fullName;
         this.username = username;
         this.email = email;
         this.password = password;
+        this.phone = phone;
         this.yob = yob;
         this.gender = gender;
     }
 
-    // Getters and setters
+    // Existing getters and setters
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
 
@@ -29,6 +31,10 @@ public class RegisterRequest {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    // New getter and setter for phone
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public int getYob() { return yob; }
     public void setYob(int yob) { this.yob = yob; }

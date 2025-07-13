@@ -1,6 +1,6 @@
-// ProfileFragment.java
 package com.example.perfumeshop.presentation.fragments.profile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,22 +14,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.perfumeshop.ApiConfig;
 import com.example.perfumeshop.R;
-import de.hdodenhof.circleimageview.CircleImageView;
-
-import android.content.Intent;
+import com.example.perfumeshop.data.api.ApiClient;
 import com.example.perfumeshop.data.api.TokenManager;
-import com.example.perfumeshop.presentation.activities.LoginActivity; // Assuming you have an AuthActivity
+import com.example.perfumeshop.data.api.ProfileApiService;
+import com.example.perfumeshop.data.models.entities.User;
+import com.example.perfumeshop.presentation.activities.LoginActivity;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ProfileFragment extends Fragment {
 
     private CircleImageView profileImage;
-    private TextView tvUserName, tvUserLocation, tvTotalShipping, tvRating, tvPoints, tvReviews;
+    private TextView tvUserName, tvUsername, tvUserEmail, tvUserPhone;
     private ImageView ivEditProfile;
     private LinearLayout llPrivacySecurity, llPaymentHistory;
-    private TextView tvMoreDetails;
     private LinearLayout llLogout;
-
+    private ProfileApiService profileApiService;
 
     @Nullable
     @Override
@@ -38,7 +45,16 @@ public class ProfileFragment extends Fragment {
 
         initViews(view);
         setupClickListeners();
-        loadUserData();
+
+        // Initialize ProfileApiService
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(ApiConfig.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        profileApiService = retrofit.create(ProfileApiService.class);
+
+        // Load user data from API
+        fetchUserProfile();
 
         return view;
     }
@@ -47,23 +63,17 @@ public class ProfileFragment extends Fragment {
         // Profile header
         profileImage = view.findViewById(R.id.profile_image);
         tvUserName = view.findViewById(R.id.tv_user_name);
-        tvUserLocation = view.findViewById(R.id.tv_user_location);
+        tvUsername = view.findViewById(R.id.tv_username);
+        tvUserEmail = view.findViewById(R.id.tv_user_email);
         ivEditProfile = view.findViewById(R.id.iv_edit_profile);
-
-        // Statistics
-        tvTotalShipping = view.findViewById(R.id.tv_total_shipping);
-        tvRating = view.findViewById(R.id.tv_rating);
-        tvPoints = view.findViewById(R.id.tv_points);
-        tvReviews = view.findViewById(R.id.tv_reviews);
+        tvUserPhone = view.findViewById(R.id.tv_user_phone);
 
         // Menu options
         llPrivacySecurity = view.findViewById(R.id.ll_privacy_security);
         llPaymentHistory = view.findViewById(R.id.ll_payment_history);
 
-        //Logout
+        // Logout
         llLogout = view.findViewById(R.id.ll_logout);
-
-
     }
 
     private void setupClickListeners() {
@@ -73,7 +83,6 @@ public class ProfileFragment extends Fragment {
             // You can navigate to edit profile fragment/activity here
         });
 
-
         llPrivacySecurity.setOnClickListener(v -> {
             // Handle privacy & security click
             Toast.makeText(getContext(), "Privacy & Security clicked", Toast.LENGTH_SHORT).show();
@@ -81,11 +90,10 @@ public class ProfileFragment extends Fragment {
         });
 
         llPaymentHistory.setOnClickListener(v -> {
-            // Handle notification preference click
-            Toast.makeText(getContext(), "Notification Preference clicked", Toast.LENGTH_SHORT).show();
-            // Navigate to notification settings
+            // Handle payment history click
+            Toast.makeText(getContext(), "Payment History clicked", Toast.LENGTH_SHORT).show();
+            // Navigate to payment history
         });
-
 
         profileImage.setOnClickListener(v -> {
             // Handle profile image click - maybe open image picker
@@ -98,40 +106,46 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    private void loadUserData() {
-        // Load user data from your data source (SharedPreferences, Database, API, etc.)
-        // For now, using the sample data from the image
+    private void fetchUserProfile() {
+        if (getContext() == null) return;
 
-        tvUserName.setText("Lewis Mariyati");
-        tvUserLocation.setText("Nganjuk, Indonesia");
-        tvTotalShipping.setText("125");
-        tvRating.setText("5");
-        tvPoints.setText("1500");
-        tvReviews.setText("25");
+        String token = TokenManager.getAccessToken(requireContext());
+        if (token == null) {
+            Toast.makeText(getContext(), "Authentication token not found", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-        // You can load the profile image here
-        // Example: Using Glide or Picasso to load image from URL
-        // Glide.with(this).load(userImageUrl).into(profileImage);
+        String authHeader = ApiConfig.BEARER + token;
+
+        profileApiService.getUserProfile(authHeader).enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    User user = response.body();
+                    updateUI(user);
+                } else {
+                    Toast.makeText(getContext(), "Failed to load profile: " + response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Toast.makeText(getContext(), "Network error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // Method to update statistics (call this when data changes)
-    public void updateStatistics(int totalShipping, float rating, int points, int reviews) {
-        if (tvTotalShipping != null) tvTotalShipping.setText(String.valueOf(totalShipping));
-        if (tvRating != null) tvRating.setText(String.valueOf(rating));
-        if (tvPoints != null) tvPoints.setText(String.valueOf(points));
-        if (tvReviews != null) tvReviews.setText(String.valueOf(reviews));
+    private void updateUI(User user) {
+        if (user == null) return;
+
+        // Use getters instead of direct field access
+        tvUserName.setText(user.getFullName());
+        tvUsername.setText("@" + user.getUsername());
+        tvUserEmail.setText(user.getEmail());
+        tvUserPhone.setText(user.getPhone());
+
     }
 
-    // Method to update user info
-    public void updateUserInfo(String name, String location, String imageUrl) {
-        if (tvUserName != null) tvUserName.setText(name);
-        if (tvUserLocation != null) tvUserLocation.setText(location);
-
-        // Load profile image if you have an image loading library
-        // if (profileImage != null && imageUrl != null) {
-        //     Glide.with(this).load(imageUrl).into(profileImage);
-        // }
-    }
     private void logoutUser() {
         // Show confirmation dialog
         new androidx.appcompat.app.AlertDialog.Builder(requireContext())

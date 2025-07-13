@@ -67,10 +67,10 @@ public class AuthRepository {
         });
     }
     // Add this method to the AuthRepository class
-    public void register(String fullName, String username, String email, String password, int yob, boolean gender, AuthCallback callback) {
+    public void register(String fullName, String username, String email, String password, String phone, int yob, boolean gender, AuthCallback callback) {
         callback.onLoading(true);
 
-        RegisterRequest registerRequest = new RegisterRequest(fullName, username, email, password, yob, gender);
+        RegisterRequest registerRequest = new RegisterRequest(fullName, username, email, password, phone, yob, gender);
 
         Call<ApiResponse<String>> call = apiService.register(registerRequest);
         call.enqueue(new Callback<ApiResponse<String>>() {

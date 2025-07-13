@@ -45,8 +45,8 @@ public class AuthViewModel extends ViewModel {
     }
 
     // Register method
-    public void register(String fullName, String username, String email, String password, int yob, boolean gender) {
-        authRepository.register(fullName, username, email, password, yob, gender, new AuthRepository.AuthCallback() {
+    public void register(String fullName, String username, String email, String password, String phone, int yob, boolean gender) {
+        authRepository.register(fullName, username, email, password, phone, yob, gender, new AuthRepository.AuthCallback() {
             @Override
             public void onSuccess(AuthResponse authResponse) {
                 isLoggedIn.setValue(true);

@@ -62,6 +62,16 @@
                 android:inputType="text"
                 android:padding="12dp"
                 android:layout_marginBottom="16dp" />
+            <!-- Add this EditText after the email field and before the password field -->
+            <EditText
+                android:id="@+id/editTextPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_background"
+                android:hint="Phone Number"
+                android:inputType="phone"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp" />
 
             <EditText
                 android:id="@+id/editTextEmail"

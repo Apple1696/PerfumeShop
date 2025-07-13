@@ -30,6 +30,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressBar progressBar;
 
     private AuthViewModel authViewModel;
+    private EditText editTextPhone;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +56,8 @@ public class RegisterActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonRegister);
         textViewLogin = findViewById(R.id.textViewLogin);
         progressBar = findViewById(R.id.progressBar);
+        editTextPhone = findViewById(R.id.editTextPhone);
+
     }
 
     private void setupViewModel() {
@@ -145,6 +149,8 @@ public class RegisterActivity extends AppCompatActivity {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString();
         String yobString = editTextYob.getText().toString().trim();
+        String phone = editTextPhone.getText().toString().trim();
+
 
         boolean cancel = false;
         View focusView = null;
@@ -159,6 +165,11 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(username)) {
             editTextUsername.setError("Username is required");
             focusView = editTextUsername;
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(phone)) {
+            editTextPhone.setError("Phone number is required");
+            focusView = editTextPhone;
             cancel = true;
         }
 
@@ -212,8 +223,7 @@ public class RegisterActivity extends AppCompatActivity {
             boolean gender = radioButtonMale.isChecked(); // true for male, false for female
 
             // Perform registration
-            authViewModel.register(fullName, username, email, password, yob, gender);
-        }
+            authViewModel.register(fullName, username, email, password, phone, yob, gender);        }
     }
 
     private boolean isEmailValid(String email) {
