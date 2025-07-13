@@ -78,9 +78,13 @@ public class ProfileFragment extends Fragment {
 
     private void setupClickListeners() {
         ivEditProfile.setOnClickListener(v -> {
-            // Handle edit profile click
-            Toast.makeText(getContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show();
-            // You can navigate to edit profile fragment/activity here
+            // Navigate to edit profile fragment
+            EditProfileFragment editProfileFragment = new EditProfileFragment();
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, editProfileFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         llPrivacySecurity.setOnClickListener(v -> {

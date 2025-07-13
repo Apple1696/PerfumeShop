@@ -27,6 +27,7 @@ public class ApiConfig {
 
     // User Profile endpoint
     public static final String USER_PROFILE = "user/profile";
+    public static final String UPDATE_PROFILE = "user/profile";
 
     // Timeouts
     public static final int TIMEOUT_CONNECT = 120; // seconds

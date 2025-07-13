@@ -40,4 +40,7 @@ public class ApiClient {
     public static ApiService getApiService() {
         return getRetrofitInstance().create(ApiService.class);
     }
+    public static ProfileApiService getProfileApiService() {
+        return getRetrofitInstance().create(ProfileApiService.class);
+    }
 }

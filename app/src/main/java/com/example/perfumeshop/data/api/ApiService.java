@@ -10,7 +10,6 @@ import com.example.perfumeshop.data.models.request.RegisterRequest;
 import com.example.perfumeshop.data.models.request.CommentRequest;
 import com.example.perfumeshop.data.models.response.ApiResponse;
 import com.example.perfumeshop.data.models.response.AuthResponse;
-import com.example.perfumeshop.data.models.response.OrderHistoryResponse;
 import com.example.perfumeshop.data.models.response.OrderResponse;
 
 import java.util.List;
@@ -49,8 +48,6 @@ public interface ApiService {
     // Order endpoint
     @POST(ApiConfig.ORDER_CREATE)
     Call<OrderResponse> createOrder(@Body OrderRequest orderRequest);
-    @GET(ApiConfig.ORDER_HISTORY)
-    Call<OrderHistoryResponse> getOrderHistory(@Header("Authorization") String authToken);
 
     // Add other endpoints as needed
     @GET("user/profile")
