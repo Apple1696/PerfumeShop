@@ -112,6 +112,21 @@
         </activity>
 
         <activity
+            android:name=".presentation.activities.OrderDetailActivity"
+            android:exported="true">
+
+            <!-- Deeplink for order detail -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="perfumeshop"
+                      android:host="order"
+                      android:path="/detail" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".presentation.activities.OrderFailedActivity"
             android:exported="true">
 

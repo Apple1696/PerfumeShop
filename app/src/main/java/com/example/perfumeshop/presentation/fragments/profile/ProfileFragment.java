@@ -34,7 +34,7 @@ public class ProfileFragment extends Fragment {
     private CircleImageView profileImage;
     private TextView tvUserName, tvUsername, tvUserEmail, tvUserPhone;
     private ImageView ivEditProfile;
-    private LinearLayout llPrivacySecurity, llPaymentHistory;
+    private LinearLayout llPrivacySecurity, llPaymentHistory, llOrderHistory;
     private LinearLayout llLogout;
     private ProfileApiService profileApiService;
 
@@ -70,6 +70,7 @@ public class ProfileFragment extends Fragment {
 
         // Menu options
         llPrivacySecurity = view.findViewById(R.id.ll_privacy_security);
+        llOrderHistory = view.findViewById(R.id.ll_order_history);
         llPaymentHistory = view.findViewById(R.id.ll_payment_history);
 
         // Logout
@@ -91,6 +92,16 @@ public class ProfileFragment extends Fragment {
             // Handle privacy & security click
             Toast.makeText(getContext(), "Privacy & Security clicked", Toast.LENGTH_SHORT).show();
             // Navigate to privacy settings
+        });
+
+        llOrderHistory.setOnClickListener(v -> {
+            // Navigate to order history fragment
+            OrderHistoryFragment orderHistoryFragment = new OrderHistoryFragment();
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, orderHistoryFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         llPaymentHistory.setOnClickListener(v -> {

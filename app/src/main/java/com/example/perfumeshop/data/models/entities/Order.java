@@ -1,7 +1,10 @@
 package com.example.perfumeshop.data.models.entities;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Order {
     private String _id;
@@ -18,7 +21,7 @@ public class Order {
     private List<OrderItem> orderItems;
     private String orderStatus;
     private String paymentStatus;
-    private Date createdAt;
+    private String createdAt;
 
     public Order() {}
 
@@ -134,15 +137,36 @@ public class Order {
         this.paymentStatus = paymentStatus;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
+    public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
+    public Date getCreatedAtAsDate() {
+        if (createdAt == null) return null;
+        try {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault());
+            return format.parse(createdAt);
+        } catch (ParseException e) {
+            // Try alternative format
+            try {
+                SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+                return format2.parse(createdAt);
+            } catch (ParseException e2) {
+                e2.printStackTrace();
+                return null;
+            }
+        }
+    }
+
     public String getFormattedTotalPrice() {
-        return String.format("%,d VND", totalPrice);
+        try {
+            return String.format(Locale.getDefault(), "%,d VND", totalPrice);
+        } catch (Exception e) {
+            return "0 VND";
+        }
     }
 }

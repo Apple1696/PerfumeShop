@@ -21,9 +21,10 @@ public class ApiConfig {
     public static final String BRAND_LIST = "brand";    // Comment endpoints
     public static final String COMMENT_CREATE = "comment/{id}"; // Use {perfumeId}
     
-    // Order endpoint
+    // Order endpoints
     public static final String ORDER_CREATE = "payment/create-payment";
     public static final String ORDER_HISTORY = "order/user";
+    public static final String ORDER_DETAIL = "order/{orderId}";
 
     // User Profile endpoint
     public static final String USER_PROFILE = "user/profile";
