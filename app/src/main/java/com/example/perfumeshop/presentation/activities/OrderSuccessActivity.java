@@ -30,8 +30,7 @@ public class OrderSuccessActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        textViewOrderNumber = findViewById(R.id.textViewOrderNumber);
-        textViewTotalAmount = findViewById(R.id.textViewTotalAmount);
+
         textViewOrderMessage = findViewById(R.id.textViewOrderMessage);
         buttonContinueShopping = findViewById(R.id.buttonContinueShopping);
         imageViewSuccess = findViewById(R.id.imageViewSuccess);
