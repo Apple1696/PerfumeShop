@@ -34,7 +34,7 @@ public class ProfileFragment extends Fragment {
     private CircleImageView profileImage;
     private TextView tvUserName, tvUsername, tvUserEmail, tvUserPhone;
     private ImageView ivEditProfile;
-    private LinearLayout llPrivacySecurity, llPaymentHistory, llOrderHistory;
+    private LinearLayout llOrderHistory;
     private LinearLayout llLogout;
     private ProfileApiService profileApiService;
 
@@ -69,9 +69,7 @@ public class ProfileFragment extends Fragment {
         tvUserPhone = view.findViewById(R.id.tv_user_phone);
 
         // Menu options
-        llPrivacySecurity = view.findViewById(R.id.ll_privacy_security);
         llOrderHistory = view.findViewById(R.id.ll_order_history);
-        llPaymentHistory = view.findViewById(R.id.ll_payment_history);
 
         // Logout
         llLogout = view.findViewById(R.id.ll_logout);
@@ -88,11 +86,7 @@ public class ProfileFragment extends Fragment {
                     .commit();
         });
 
-        llPrivacySecurity.setOnClickListener(v -> {
-            // Handle privacy & security click
-            Toast.makeText(getContext(), "Privacy & Security clicked", Toast.LENGTH_SHORT).show();
-            // Navigate to privacy settings
-        });
+
 
         llOrderHistory.setOnClickListener(v -> {
             // Navigate to order history fragment
@@ -104,11 +98,7 @@ public class ProfileFragment extends Fragment {
                     .commit();
         });
 
-        llPaymentHistory.setOnClickListener(v -> {
-            // Handle payment history click
-            Toast.makeText(getContext(), "Payment History clicked", Toast.LENGTH_SHORT).show();
-            // Navigate to payment history
-        });
+
 
         profileImage.setOnClickListener(v -> {
             // Handle profile image click - maybe open image picker

@@ -167,48 +167,7 @@
             android:orientation="vertical">
 
             <!-- Privacy & Security -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
 
-                <LinearLayout
-                    android:id="@+id/ll_privacy_security"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_shield"
-                        app:tint="#666666" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="Privacy &amp; Security"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_arrow_right"
-                        app:tint="#CCCCCC" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
 
             <!-- Order History -->
             <androidx.cardview.widget.CardView
@@ -254,49 +213,7 @@
 
             </androidx.cardview.widget.CardView>
 
-            <!-- Payment History -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
 
-                <LinearLayout
-                    android:id="@+id/ll_payment_history"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:background="?android:attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_paymeny_history"
-                        app:tint="#666666" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_weight="1"
-                        android:text="Payment History"
-                        android:textColor="#333333"
-                        android:textSize="16sp"
-                        android:layout_gravity="center_vertical" />
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:layout_gravity="center_vertical"
-                        android:src="@drawable/ic_arrow_right"
-                        app:tint="#CCCCCC" />
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
 
             <!-- Logout Option -->
             <androidx.cardview.widget.CardView
