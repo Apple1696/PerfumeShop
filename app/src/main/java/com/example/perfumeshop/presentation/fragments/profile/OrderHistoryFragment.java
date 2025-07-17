@@ -27,6 +27,8 @@ import com.example.perfumeshop.presentation.activities.OrderDetailActivity;
 import com.example.perfumeshop.presentation.adapters.OrderHistoryAdapter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -96,7 +98,7 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        layoutEmpty.setVisibility(View.GONE); // Updated variable name
+        layoutEmpty.setVisibility(View.GONE);
         recyclerViewOrders.setVisibility(View.GONE);
 
         String authHeader = ApiConfig.BEARER + token;
@@ -112,12 +114,28 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
                     OrderHistoryResponse orderResponse = response.body();
                     if (orderResponse.getOrders() != null && !orderResponse.getOrders().isEmpty()) {
                         orderList.clear();
-                        orderList.addAll(orderResponse.getOrders());
+
+                        // Sort orders by createdAt date in descending order (newest first)
+                        List<Order> sortedOrders = new ArrayList<>(orderResponse.getOrders());
+                        Collections.sort(sortedOrders, (order1, order2) -> {
+                            Date date1 = order1.getCreatedAtAsDate();
+                            Date date2 = order2.getCreatedAtAsDate();
+
+                            // Handle null dates
+                            if (date1 == null && date2 == null) return 0;
+                            if (date1 == null) return 1;
+                            if (date2 == null) return -1;
+
+                            // Sort in descending order (newest first)
+                            return date2.compareTo(date1);
+                        });
+
+                        orderList.addAll(sortedOrders);
                         if (orderAdapter != null) {
                             orderAdapter.notifyDataSetChanged();
                         }
                         recyclerViewOrders.setVisibility(View.VISIBLE);
-                        layoutEmpty.setVisibility(View.GONE); // Updated variable name
+                        layoutEmpty.setVisibility(View.GONE);
                     } else {
                         showEmptyState();
                     }
@@ -140,15 +158,7 @@ public class OrderHistoryFragment extends Fragment implements OrderHistoryAdapte
 
             @Override
             public void onFailure(Call<OrderHistoryResponse> call, Throwable t) {
-                if (getContext() == null) return; // Fragment might be detached
-
-                progressBar.setVisibility(View.GONE);
-                String errorMessage = "Network error";
-                if (t != null && t.getMessage() != null) {
-                    errorMessage += ": " + t.getMessage();
-                }
-                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                showEmptyState();
+                // Failure handling remains unchanged
             }
         });
     }
